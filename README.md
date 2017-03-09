@@ -1,0 +1,2 @@
+# inflation
+Inflation javascript library
