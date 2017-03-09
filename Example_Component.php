@@ -26,6 +26,10 @@
     <!-- This is the component JAVASCRIPT -->
     <script>
         
+        // You can include other components that your component uses here
+        //Inflation.include("OtherComponent.php");
+        
+        /** My Component */
         function Component(elem) {
             var that = Inflation.super(this, elem); // always initialize component class like this
             

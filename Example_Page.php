@@ -1,5 +1,8 @@
+<!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
+        <title>Inflation example</title>
         <script src="inflation.js"></script>
     </head>
 
