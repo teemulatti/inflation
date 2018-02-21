@@ -1,6 +1,6 @@
 // The Inflation Javascript Library
 //
-// Copyright (c) 2016 WELLEVO Teemu Lätti
+// Copyright (c) 2016-2018 WELLEVO Teemu Lätti
 //
 // teemu.latti@wellevo.com
 //
@@ -526,22 +526,35 @@ var Inflation = {
         }
     },
 
-    /** Initializes object as Inflation object */
-    super: function( object, elementOrObjectName ) {
-        if (typeof elementOrObjectName==='string' || elementOrObjectName instanceof String) {
-            // Object name to inflate
-            object.elem = Inflation.inflate(elementOrObjectName);
+    /** Initializes object as Inflation object
+            var that = Inflation.super(this)
+            var that = Inflation.super(this, Parent, elementOrName)
+            var that = Inflation.super(this, elementOrName)
+    */
+    super: function( this_, a2, a3 ) {
+        if (typeof(a2) === 'function') {
+            // Inflation.super(this, Parent, elem) => call parent class constructor
+            a2.call(this_, a3);
+            return this_;
+        }
+
+        // Inflation.super(this, elem)
+        var elementOrName = a2;
+        
+        if (typeof(elementOrName) === 'string' || elementOrName instanceof String) {
+            // Inflate to element
+            this_.elem = Inflation.inflate(elementOrName);
         } else {
             // Assuming is element
-            object.elem = elementOrObjectName;
+            this_.elem = elementOrName;
         }
 
         // Methods
-        object.getElementById = function(id) {
-            return Inflation.getElementById( object.elem, id );
+        this_.getElementById = function(id) {
+            return Inflation.getElementById( this_.elem, id );
         };
         
-        return object;
+        return this_;
     },
     
     hasClass: function(element, className) {
@@ -558,6 +571,5 @@ var Inflation = {
         if (className.length > 0 && Inflation.hasClass(element, className)) {
             element.className = (" " + element.className + " ").replace(" " + className + " ", " ").trim();
         }
-    }
-
+    },
 }
