@@ -147,45 +147,31 @@ var Inflation = {
 
         // Evaluate the script
         //Inflation.trace("eval: " + script);
-        if (window.execScript != undefined) {
+        if (window.execScript) {
             window.execScript(script);
         } else {
             window.eval.call(window, script);
         }
     },
 
-    /** Includes remote file that contains style+body+script parts.
+    /** Includes remote file which contains style+body+script parts OR file which contains only style(.css)/script(.js)
     *   readyFunc is optional. Includes file only once.
     */
     include: function( url, /*opt*/ readyFunc ) {
         "use strict";
-        Inflation.includeSub(url, readyFunc, 0);
-    },
-
-    /** Includes remote style file. readyFunc is optional.
-    *   Includes file only once.
-    */
-    includeStyle: function( url, /*opt*/ readyFunc ) {
-        "use strict";
-        if (url !== null && url !== undefined) {
-            Inflation.includeSub(url, readyFunc, 2);
-        }
-    },
-
-    /** Includes remote script file. readyFunc is optional.
-    *   Includes file only once.
-    */
-    includeScript: function( url, /*opt*/ readyFunc ) {
-        "use strict";
-        if (url !== null && url !== undefined) {
+        if (url.substr(url.length - 3) == ".js") {
             if (Inflation.waiting.length > 0) {
                 // Scripts must be loaded in order, because they may depend on each other
                 Inflation.includeFuncs.push(function() {
-                    Inflation.includeScript(url, readyFunc);
+                    Inflation.includeSub(url, readyFunc, 3);
                 });
             } else {
                 Inflation.includeSub(url, readyFunc, 3);
             }
+        } else if (url.substr(url.length - 4) == ".css") {
+            Inflation.includeSub(url, readyFunc, 2);
+        } else {
+            Inflation.includeSub(url, readyFunc, 0);
         }
     },
 
@@ -219,7 +205,7 @@ var Inflation = {
                     
                 } else if (type == 3) {
                     // JS file
-                    if (window.execScript != undefined) {
+                    if (window.execScript) {
                         window.execScript(resp);
                     } else {
                         window.eval.call(window, resp);
@@ -233,7 +219,7 @@ var Inflation = {
         });
         
         // Register ready function
-        if ( readyFunc !== null && readyFunc !== undefined ) {
+        if ( readyFunc ) {
             Inflation.readyIncludeFuncs.push(readyFunc);
         }
     },
@@ -241,7 +227,7 @@ var Inflation = {
     /** Creates new HTML div element. className is optional */
     div: function (/*opt*/ className) {
         var element = document.createElement("div");
-        if (className !== null && className !== undefined) {
+        if (className) {
             element.setAttribute("class", className);
         }
         return element;
@@ -462,7 +448,7 @@ var Inflation = {
         
         // Check this node
         var objectName = element.getAttribute("inflate");
-        if (objectName !== undefined && objectName !== null) {
+        if (objectName) {
             // Inflate contents children and attributes
             // (ignoring the container div that is created by inflator)
             // NOTE must use intermediate array because adding child to node
@@ -481,7 +467,7 @@ var Inflation = {
                 var name = inflated.attributes[i].name;
                 var value = inflated.attributes[i].value;
                 // element.attributes also includes methods, but this check protects against that
-                if (value !== undefined) {
+                if (value) {
                     if (name == "class") {
                         // Do not replace classes but only add to them
                         element.className += ((element.className.length > 0) ? " " : "") + value;
@@ -570,6 +556,14 @@ var Inflation = {
     removeClass: function(element, className) {
         if (className.length > 0 && Inflation.hasClass(element, className)) {
             element.className = (" " + element.className + " ").replace(" " + className + " ", " ").trim();
+        }
+    },
+
+    changeClass: function(element, className, set) {
+        if (set) {
+            Inflation.addClass(element, className);
+        } else {
+            Inflation.removeClass(element, className);
         }
     },
 }
