@@ -159,7 +159,16 @@ var Inflation = {
     */
     include: function( url, /*opt*/ readyFunc ) {
         "use strict";
-        if (url.substr(url.length - 3) == ".js") {
+        var getUrlExt = function(s) {
+            var i = s.lastIndexOf('?');
+            if (i >= 0) {
+                s = s.substr(0,i);
+            }
+            i = s.lastIndexOf('.');
+            return (i >= 0) ? s.substr(i) : "";
+        };
+        var ext = getUrlExt(url);
+        if (ext == ".js") {
             if (Inflation.waiting.length > 0) {
                 // Scripts must be loaded in order, because they may depend on each other
                 Inflation.includeFuncs.push(function() {
@@ -168,7 +177,7 @@ var Inflation = {
             } else {
                 Inflation.includeSub(url, readyFunc, 3);
             }
-        } else if (url.substr(url.length - 4) == ".css") {
+        } else if (ext == ".css") {
             Inflation.includeSub(url, readyFunc, 2);
         } else {
             Inflation.includeSub(url, readyFunc, 0);
