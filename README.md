@@ -7,6 +7,6 @@ This javascript library enables you to write web components in their own files w
 Licence
 -------
 
-Copyright (c) 2016-2018 WELLEVO Teemu Lätti teemu.latti@wellevo.com
+Copyright (c) 2016-2018 CUPLA SOFTWARE Teemu Lätti teemu.latti@cupla.net
 
 You are free to use this javascript library for commercial and non-commercial use
