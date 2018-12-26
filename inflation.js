@@ -73,10 +73,11 @@ var Inflation = {
         }
         
         // Embed style to document
+        // NOTE: correct order is before previously included styles, so overrides
         if (style.length > 0) {
             var styleElement = document.createElement("style");
             styleElement.innerHTML = style;
-            document.head.appendChild(styleElement);
+            document.head.insertBefore(styleElement, document.head.childNodes[0]);
         }
 
         // Bodies
@@ -208,9 +209,10 @@ var Inflation = {
                     
                 } else if (type == 2) {
                     // CSS file
+                    // NOTE: correct order is before previously included styles, so overrides
                     var styleElement = document.createElement("style");
                     styleElement.innerHTML = resp;
-                    document.head.appendChild(styleElement);
+                    document.head.insertBefore(styleElement, document.head.childNodes[0]);
                     
                 } else if (type == 3) {
                     // JS file
